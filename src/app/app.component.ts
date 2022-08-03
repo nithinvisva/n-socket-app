@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'n-socket-app';
   ticktak = [0, 1, 2];
   isGameOver :Array<any>=[]
-  messageList:Array<{i:number,j:number,userId:string| null,value:string, boxId:number}>=[]
+  messageList:Array<{i:number,j:number,userId:string| null,value?:string, boxId:number}>=[]
   tictactoeList: string[][] = [['', '', ''], ['', '', ''], ['', '', '']]
   winningCombination=[[0,1,2],[0,3,6],[0,4,8],[1,4,7],[2,4,6],[3,4,5],[2,5,8],[6,7,8]]
   constructor(private chatService: ChatService) {
@@ -19,13 +19,15 @@ export class AppComponent implements OnInit {
   }
   ngOnInit() {
     this.generateMessageList();
-    this.chatService.getNewMessage().subscribe((message: {i:number,j:number,userId:string| null,value:string, boxId:number}) => {
+    this.chatService.getNewMessage().subscribe((message: {i?:number,j?:number,userId?:string| null,value?:string, boxId?:number}) => {
+      if(message?.i != undefined && message?.j != undefined && message?.value !=undefined ){
       this.messageList.map((data)=>{
         if(data.boxId == message.boxId){
           data.value = message.value
         }
       })
       this.tictactoeList[message.i][message.j] = message.value
+      }
       this.isGameOver= this.checkWinner()
     })
   }
@@ -94,7 +96,6 @@ export class AppComponent implements OnInit {
     const data = _.orderBy(this.messageList,'boxId').map((data)=>{
       return data.value
     })
-    console.log(data)
     for(let i=0;i<this.winningCombination.length;i++){
       const [a,b,c]= this.winningCombination[i];
       if(data[a] && data[a]==data[b] && data[a]==data[c]){

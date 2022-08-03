@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ChatService {
 
-  public message$= new BehaviorSubject<{i:number,j:number,userId:string| null, value:string, boxId:number}>({} as {i:number,j:number,userId:string| null, value:string, boxId:number});
+  public message$= new BehaviorSubject<{i?:number,j?:number,userId?:string| null, value?:string, boxId?:number}>({});
   constructor() {}
 
   socket = io(environment.url);
